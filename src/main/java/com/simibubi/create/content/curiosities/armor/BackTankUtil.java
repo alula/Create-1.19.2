@@ -7,11 +7,10 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
+import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
@@ -105,11 +104,10 @@ public class BackTankUtil {
 
 	// For Air-using tools
 
-	@Environment(EnvType.CLIENT)
 	public static boolean isBarVisible(ItemStack stack, int usesPerTank) {
 		if (usesPerTank == 0)
 			return false;
-		LocalPlayer player = Minecraft.getInstance().player;
+		Player player = EnvExecutor.callWhenOn(EnvType.CLIENT, () -> () -> Minecraft.getInstance().player);
 		if (player == null)
 			return false;
 		ItemStack backtank = get(player);
@@ -118,11 +116,10 @@ public class BackTankUtil {
 		return true;
 	}
 
-	@Environment(EnvType.CLIENT)
 	public static int getBarWidth(ItemStack stack, int usesPerTank) {
 		if (usesPerTank == 0)
 			return 13;
-		LocalPlayer player = Minecraft.getInstance().player;
+		Player player = EnvExecutor.callWhenOn(EnvType.CLIENT, () -> () -> Minecraft.getInstance().player);
 		if (player == null)
 			return 13;
 		ItemStack backtank = get(player);
@@ -132,11 +129,10 @@ public class BackTankUtil {
 			.getBarWidth(backtank);
 	}
 
-	@Environment(EnvType.CLIENT)
 	public static int getBarColor(ItemStack stack, int usesPerTank) {
 		if (usesPerTank == 0)
 			return 0;
-		LocalPlayer player = Minecraft.getInstance().player;
+		Player player = EnvExecutor.callWhenOn(EnvType.CLIENT, () -> () -> Minecraft.getInstance().player);
 		if (player == null)
 			return 0;
 		ItemStack backtank = get(player);

@@ -142,8 +142,8 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 	private void initHandler() {
 		if (invHandler != null)
 			return;
-		if (!level.isClientSide) {
-			player = new DeployerFakePlayer((ServerLevel) level);
+		if (level instanceof ServerLevel sLevel) {
+			player = new DeployerFakePlayer(sLevel);
 			if (deferredInventoryList != null) {
 				player.getInventory()
 					.load(deferredInventoryList);

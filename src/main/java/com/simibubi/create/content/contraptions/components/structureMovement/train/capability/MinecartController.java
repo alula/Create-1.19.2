@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import io.github.fabricators_of_create.porting_lib.extensions.INBTSerializableCompound;
+import io.github.fabricators_of_create.porting_lib.extensions.INBTSerializable;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
@@ -41,7 +41,7 @@ import net.minecraft.world.phys.Vec3;
  * Extended code for Minecarts, this allows for handling stalled carts and
  * coupled trains
  */
-public class MinecartController implements INBTSerializableCompound {
+public class MinecartController implements INBTSerializable<CompoundTag> {
 
 	public static MinecartController EMPTY;
 	private boolean needsEntryRefresh;

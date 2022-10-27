@@ -15,21 +15,20 @@ import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
-import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.recipe.DummyCraftingContainer;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
-import net.fabricmc.fabric.api.transfer.v1.storage.base.ResourceAmount;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
@@ -84,6 +83,14 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 		List<FluidIngredient> fluidIngredients =
 			isBasinRecipe ? ((BasinRecipe) recipe).getFluidIngredients() : Collections.emptyList();
 
+		// fabric: get remainders before the inv changes
+		NonNullList<ItemStack> remainders = null;
+		if (recipe instanceof BasinRecipe basinRecipe) {
+			remainders = basinRecipe.getRemainingItems(basin.getInputInventory());
+		} else if (recipe instanceof CraftingRecipe craftingRecipe) {
+			remainders = craftingRecipe.getRemainingItems(new DummyCraftingContainer(availableItems));
+		}
+
 		try (Transaction t = TransferUtil.getTransaction()) {
 			Ingredients: for (Ingredient ingredient : ingredients) {
 				for (StorageView<ItemVariant> view : availableItems) {
@@ -96,8 +103,6 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 						continue Ingredients;
 					long extracted = view.extract(var, 1, t);
 					if (extracted == 0) continue;
-					if (stack.getItem().hasCraftingRemainingItem())
-						recipeOutputItems.add(stack.getItem().getCraftingRemainingItem().getDefaultInstance());
 					continue Ingredients;
 				}
 				// something wasn't found
@@ -132,11 +137,17 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 				});
 			}
 
-			if (recipe instanceof BasinRecipe) {
-				recipeOutputItems.addAll(((BasinRecipe) recipe).rollResults());
-				recipeOutputFluids.addAll(((BasinRecipe) recipe).getFluidResults());
-			} else
+			if (recipe instanceof BasinRecipe basinRecipe) {
+				recipeOutputItems.addAll(basinRecipe.rollResults());
+				recipeOutputFluids.addAll(basinRecipe.getFluidResults());
+			} else {
 				recipeOutputItems.add(recipe.getResultItem());
+			}
+
+			// fabric: add remainders that were stored above
+			if (remainders != null) {
+				recipeOutputItems.addAll(remainders);
+			}
 
 			if (!basin.acceptOutputs(recipeOutputItems, recipeOutputFluids, t))
 				return false;

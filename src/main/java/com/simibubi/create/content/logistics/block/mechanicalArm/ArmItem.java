@@ -1,8 +1,7 @@
 package com.simibubi.create.content.logistics.block.mechanicalArm;
 
-import com.tterrag.registrate.fabric.EnvExecutor;
+import com.simibubi.create.foundation.networking.AllPackets;
 
-import net.fabricmc.api.EnvType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -32,8 +31,8 @@ public class ArmItem extends BlockItem {
 	@Override
 	protected boolean updateCustomBlockEntityTag(BlockPos pos, Level world, Player player, ItemStack p_195943_4_,
 		BlockState p_195943_5_) {
-		if (world.isClientSide)
-			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> ArmInteractionPointHandler.flushSettings(pos));
+		if (!world.isClientSide && player instanceof ServerPlayer sp)
+			AllPackets.channel.sendToClient(new ArmPlacementPacket.ClientBoundRequest(pos), sp);
 		return super.updateCustomBlockEntityTag(pos, world, player, p_195943_4_, p_195943_5_);
 	}
 

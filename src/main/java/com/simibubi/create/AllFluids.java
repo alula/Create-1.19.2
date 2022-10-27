@@ -104,7 +104,6 @@ public class AllFluids {
 					.bucket()
 					.tag(AllTags.forgeItemTag("buckets/honey"))
 					.build()
-//					.fluidRenderingAttributes(() -> SimpleFluidRenderHandler::new)
 					.onRegisterAfter(Registry.ITEM_REGISTRY, honey -> {
 						Fluid source = honey.getSource();
 						FluidStorage.combinedItemApiProvider(HONEY_BOTTLE).register(context ->
@@ -132,7 +131,6 @@ public class AllFluids {
 							.tickRate(25)
 							.flowSpeed(3)
 							.blastResistance(100f))
-//					.fluidRenderingAttributes(() -> SimpleFluidRenderHandler::new)
 					.onRegisterAfter(Registry.ITEM_REGISTRY, chocolate -> {
 						Fluid source = chocolate.getSource();
 						// transfer values

@@ -73,7 +73,6 @@ import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
-import static com.simibubi.create.CreateClient.SCHEMATIC_HANDLER;
 
 import io.github.fabricators_of_create.porting_lib.event.client.CameraSetupCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.CameraSetupCallback.CameraInfo;
@@ -152,7 +151,7 @@ public class ClientEvents {
 		CreateClient.SCHEMATIC_SENDER.tick();
 		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.tick();
 		CreateClient.GLUE_HANDLER.tick();
-		SCHEMATIC_HANDLER.tick();
+		CreateClient.SCHEMATIC_HANDLER.tick();
 		CreateClient.ZAPPER_RENDER_HANDLER.tick();
 		CreateClient.POTATO_CANNON_RENDER_HANDLER.tick();
 		CreateClient.SOUL_PULSE_EFFECT_HANDLER.tick(world);
@@ -236,7 +235,7 @@ public class ClientEvents {
 		TrackTargetingClient.render(ms, buffer);
 		CouplingRenderer.renderAll(ms, buffer);
 		CarriageCouplingRenderer.renderAll(ms, buffer);
-		SCHEMATIC_HANDLER.render(ms, buffer);
+		CreateClient.SCHEMATIC_HANDLER.render(ms, buffer);
 		CreateClient.GHOST_BLOCKS.renderAll(ms, buffer);
 
 		CreateClient.OUTLINER.renderOutlines(ms, buffer, pt);
@@ -410,7 +409,7 @@ public class ClientEvents {
 				GoggleOverlayRenderer.renderOverlay(stack, partialTicks, window);
 				BlueprintOverlayRenderer.renderOverlay(stack, partialTicks, window);
 				LinkedControllerClientHandler.renderOverlay(stack, partialTicks, window);
-				SCHEMATIC_HANDLER.renderOverlay(stack, partialTicks, window);
+				CreateClient.SCHEMATIC_HANDLER.renderOverlay(stack, partialTicks, window);
 				ToolboxHandlerClient.renderOverlay(stack, partialTicks, window);
 			}
 			return false;

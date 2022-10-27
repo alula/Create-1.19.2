@@ -17,7 +17,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.fabric.AbstractMinecartExtensions;
 
-import io.github.fabricators_of_create.porting_lib.extensions.INBTSerializableCompound;
+import io.github.fabricators_of_create.porting_lib.extensions.INBTSerializable;
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -31,7 +31,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
 
-public class CapabilityMinecartController implements INBTSerializableCompound {
+public class CapabilityMinecartController implements INBTSerializable<CompoundTag> {
 
 	/* Global map of loaded carts */
 

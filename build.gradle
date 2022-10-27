@@ -1,10 +1,9 @@
 //file:noinspection GradlePackageVersionRange
 //file:noinspection GrMethodMayBeStatic
 plugins {
-    id "fabric-loom" version "0.12-SNAPSHOT"
+    id "fabric-loom" version "1.0.+"
     id "maven-publish"
     id "io.github.juuxel.loom-quiltflower" version "1.+" // Quiltflower, a better decompiler
-    id "org.quiltmc.quilt-mappings-on-loom" version "4.2.1" // Quilt Mappings, for parameters and javadoc. Also hashed mojmap.
     id "io.github.p03w.machete" version "1.1.4" // automatic jar compressing on build
 }
 
@@ -20,6 +19,7 @@ archivesBaseName = "create-fabric-${project.minecraft_version}"
 repositories {
     mavenCentral()
     mavenLocal()
+    maven { url = "https://maven.quiltmc.org/repository/release" }
     maven { url = "https://hephaestus.dev/release" }
     maven { url = "https://api.modrinth.com/maven" }
     maven { url = "https://cursemaven.com" }
@@ -80,7 +80,7 @@ def dependencies(DependencyHandler deps) {
 def setup(DependencyHandler deps) {
     deps.minecraft("com.mojang:minecraft:${project.minecraft_version}")
     deps.mappings(loom.layered {
-//        it.addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:${project.minecraft_version}+build.${project.qm_version}:v2"))
+        it.mappings("org.quiltmc:quilt-mappings:${project.minecraft_version}+build.${project.qm_version}:intermediary-v2")
         it.parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_version}@zip")
         it.officialMojangMappings { nameSyntheticMembers = false }
     })
@@ -90,7 +90,7 @@ def setup(DependencyHandler deps) {
 // setup mods that enhance development
 def devEnv(DependencyHandler deps) {
     deps.modLocalRuntime("maven.modrinth:lazydfu:0.1.3")
-    deps.modLocalRuntime("maven.modrinth:lithium:mc1.19.2-0.8.3")
+    deps.modLocalRuntime("maven.modrinth:lithium:mc1.19.2-0.10.0")
     // used to prevent forge config api port from complaining
     deps.modImplementation("com.github.AlphaMode:fakeconfig:master-SNAPSHOT") { exclude(group: "net.fabricmc.fabric-api") }
     deps.modImplementation("com.github.AlphaMode:fakeconfigtoml:master-SNAPSHOT") { exclude(group: "net.fabricmc.fabric-api") }
